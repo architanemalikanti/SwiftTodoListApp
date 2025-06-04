@@ -8,12 +8,15 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    @State private var isNight = false //UI will react to this variable.
+    //set up UI: what happens if isNight is true, false?
     var body: some View {
         ZStack {
-            BackgroundView(topColor: .blue, bottomColor: Color("LightBlue"))
+            BackgroundView(isNight: $isNight);
             VStack(spacing: 8){
                 CityTextView(cityName: "Cupertino, CA")
-                MainWeatherStatusView(imageName: "cloud.sun.fill",
+                MainWeatherStatusView(imageName: isNight ? "moon": "cloud.sun.fill",
                                       temp: 76)
                 
                 
@@ -30,7 +33,7 @@ struct ContentView: View {
                 Spacer()
                 
                 Button {
-                    print("tapped!")
+                    isNight.toggle()
                 } label: {
                     WeatherButton(title: "Change day time",
                            textColor: .blue,
@@ -75,11 +78,10 @@ struct WeatherDayView: View {
 }
 
 struct BackgroundView: View {
-    var topColor: Color
-    var bottomColor: Color
+    @Binding var isNight: Bool
     
     var body: some View {
-        LinearGradient (gradient: Gradient(colors: [topColor, bottomColor]),
+        LinearGradient (gradient: Gradient(colors: [isNight ? .black : .blue, isNight ? .gray : Color("lightBlue") ]),
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing)
         .edgesIgnoringSafeArea(.all)
